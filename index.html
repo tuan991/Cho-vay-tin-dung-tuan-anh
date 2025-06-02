@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Web Đầu Tiên</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #2e8b57;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e6b45;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chào mừng đến với trang web của bạn!</h1>
+  <p>Bấm nút bên dưới để xem lời chào từ JavaScript.</p>
+  <button onclick="sayHello()">Bấm vào đây</button>
+
+  <script>
+    function sayHello() {
+      alert("Xin chào! Đây là trang web đầu tiên của bạn.");
+    }
+  </script>
+</body>
+</html>
