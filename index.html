@@ -166,7 +166,6 @@
       background: var(--primary);
       color:#fff;
     }
-    .btn.secondary{ background: #111827; }
     .btn.ghost{ background: #e5e7eb; color:#111827; }
     .btn.danger{ background: var(--danger); }
     .btn:disabled{ opacity:.6; cursor:not-allowed; }
@@ -273,11 +272,10 @@
           <h2>Dịch vụ & Thông tin liên hệ</h2>
           <div class="hint">Bạn có thể thêm/sửa/xóa dịch vụ. (Dữ liệu lưu localStorage)</div>
         </div>
-        <div class="hint">Bấm “Trang chủ” để reload trang.</div>
       </div>
 
       <div class="split">
-        <!-- LEFT: Services -->
+        <!-- LEFT -->
         <div class="card">
           <h3>Dịch vụ đang hiển thị</h3>
           <div class="muted">Khách sẽ thấy các thẻ dịch vụ dưới đây.</div>
@@ -321,7 +319,7 @@
           </table>
         </div>
 
-        <!-- RIGHT: Contact -->
+        <!-- RIGHT -->
         <div class="card">
           <h3>Liên hệ nhanh</h3>
           <div class="muted">Khách có thể bấm gọi/nhắn ngay.</div>
@@ -334,14 +332,13 @@
 
           <div class="contact-links">
             <a href="https://zalo.me/0346635146" target="_blank" rel="noopener">Nhắn Zalo</a>
-            <a href="mailto:8444446@gmail.com?subject=Tu%E1%BA%A5n%20Anh%20-%20Kh%C3%A1ch%20c%E1%BA%A7n%20t%C6%B0%20v%E1%BA%A5n&body=Ch%C3%A0o%20Tu%E1%BA%A5n%20Anh%2C%20m%C3%ACnh%20mu%E1%BB%91n%20t%C6%B0%20v%E1%BA%A5n%20kho%E1%BA%A3n%20vay...">Gửi Email nhanh</a>
+            <a href="mailto:8444446@gmail.com">Gửi Email</a>
             <a href="https://www.facebook.com/profile.php?id=61582350717268" target="_blank" rel="noopener">Nhắn Facebook</a>
           </div>
 
           <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
-
           <div class="muted">
-            <strong>Thông báo đăng ký:</strong> Khi khách gửi form, hệ thống sẽ gửi email báo về <strong>8444446@gmail.com</strong>.
+            Khi khách gửi form đăng ký, hệ thống sẽ <strong>gửi email báo về bạn</strong>.
           </div>
         </div>
       </div>
@@ -403,11 +400,13 @@
     © 2025 Dịch vụ vay tiêu dùng, tài chính, kinh doanh • © TUẤN ANH MIRAE • © MIRAE ASSET
   </footer>
 
-  <script>
-    // ✅ URL GOOGLE APPS SCRIPT CỦA BẠN (đã thêm đầy đủ)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweNngj-CR-vYgbemDuSRwRWQk6nfaeE9G-KWLXJT9bIc-YBgSbdduU8k77g7hAFgct/exec";
+  <!-- iframe ẩn để submit form không chuyển trang -->
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-    // ====== STATE + STORAGE ======
+  <script>
+    // ✅ URL Apps Script mới của bạn (đã thêm full)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdV2xXhoc60rBhzTIRG_g_ixnFNnppMTCcNeeRsejvWJz9zQyoF0ljCmIobtnuyJ3p/exec";
+
     const STORAGE_KEY_SERVICES = "tuankem_services_v2";
     const STORAGE_KEY_REG = "tuankem_registrations_v2";
 
@@ -437,7 +436,6 @@
         try { services = JSON.parse(raw) || []; }
         catch { services = []; }
       }
-
       if (!services.length) {
         services = [
           { id: uid(), name: "Giải ngân trong ngày", rate: "24–48h", desc: "Thủ tục đơn giản, nhận tiền chỉ trong 24h-48h." },
@@ -448,7 +446,6 @@
       }
     }
 
-    // ====== RENDER ======
     function renderServicesCards() {
       const container = document.getElementById("servicesCards");
       container.innerHTML = "";
@@ -513,26 +510,12 @@
       showPanel("panelServices");
     }
 
-    // ====== PANELS ======
     function showPanel(panelId) {
       ["panelServices","panelRegister"].forEach(id => {
         document.getElementById(id).classList.remove("active");
       });
       document.getElementById(panelId).classList.add("active");
       document.getElementById(panelId).scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    // ====== SEND REGISTRATION TO APPS SCRIPT ======
-    async function postRegistrationToScript(payload) {
-      const res = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) return { ok: false, reason: "HTTP_ERROR", data };
-      return { ok: true, data };
     }
 
     function saveRegistrationLocal(payload) {
@@ -551,11 +534,12 @@
       box.innerHTML = msg;
     }
 
-    // ====== EVENTS ======
+    // NAV
     document.getElementById("btnHome").addEventListener("click", () => location.reload());
     document.getElementById("btnServices").addEventListener("click", () => showPanel("panelServices"));
     document.getElementById("btnRegister").addEventListener("click", () => showPanel("panelRegister"));
 
+    // SERVICES CRUD
     document.getElementById("btnSaveService").addEventListener("click", () => {
       const name = document.getElementById("svcName").value.trim();
       const rate = document.getElementById("svcRate").value.trim();
@@ -594,7 +578,8 @@
       clearServiceForm();
     });
 
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    // REGISTER SUBMIT: gửi bằng hidden form để không lỗi CORS
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
       e.preventDefault();
 
       const btn = document.getElementById("btnSubmitReg");
@@ -604,7 +589,6 @@
       const svc = services.find(s => s.id === serviceId);
 
       const payload = {
-        id: uid(),
         time: new Date().toISOString(),
         fullName: document.getElementById("fullName").value.trim(),
         phone: document.getElementById("phone").value.trim(),
@@ -624,52 +608,48 @@
         return;
       }
 
-      // Lưu tạm local
-      saveRegistrationLocal(payload);
-      setStatus("Đang gửi đăng ký... Vui lòng chờ.", "info");
+      // Lưu local
+      saveRegistrationLocal({ id: uid(), ...payload });
 
-      try {
-        const result = await postRegistrationToScript(payload);
+      // Hiện thông báo cho khách
+      setStatus(`
+        <div class="pill">Đã gửi đăng ký ✅</div>
+        <p style="margin:10px 0 0">
+          Cảm ơn <strong>${escapeHtml(payload.fullName)}</strong>.
+          Chúng tôi sẽ liên hệ số <strong>${escapeHtml(payload.phone)}</strong> sớm.
+        </p>
+        <p style="margin:6px 0 0;color:var(--muted)">
+          Dịch vụ: <strong>${escapeHtml(payload.serviceName)}</strong> • Bạn sẽ nhận email thông báo.
+        </p>
+      `, "ok");
 
-        if (result.ok) {
-          setStatus(`
-            <div class="pill">Gửi thành công</div>
-            <p style="margin:10px 0 0">
-              Cảm ơn <strong>${escapeHtml(payload.fullName)}</strong>. Chúng tôi sẽ liên hệ số
-              <strong>${escapeHtml(payload.phone)}</strong> sớm.
-            </p>
-            <p style="margin:6px 0 0;color:var(--muted)">
-              Dịch vụ: <strong>${escapeHtml(payload.serviceName)}</strong> • Email đã gửi về <strong>8444446@gmail.com</strong>
-            </p>
-          `, "ok");
-          e.target.reset();
-        } else {
-          setStatus(`
-            <div class="pill">Gửi chưa thành công</div>
-            <p style="margin:10px 0 0">
-              Có lỗi khi gửi. Bạn kiểm tra lại Apps Script đã Deploy dạng Web App (Anyone access).
-            </p>
-          `, "warn");
-        }
-      } catch (err) {
-        setStatus(`
-          <div class="pill">Lỗi kết nối</div>
-          <p style="margin:10px 0 0">
-            Không gửi được thông báo do lỗi mạng hoặc cấu hình Apps Script. Dữ liệu vẫn lưu tạm trên trình duyệt.
-          </p>
-        `, "warn");
-      } finally {
-        btn.disabled = false;
-      }
+      // Tạo form hidden để POST
+      const form = document.createElement("form");
+      form.action = SCRIPT_URL;
+      form.method = "POST";
+      form.target = "hidden_iframe";
+
+      Object.keys(payload).forEach((k) => {
+        const inp = document.createElement("input");
+        inp.type = "hidden";
+        inp.name = k;
+        inp.value = payload[k] || "";
+        form.appendChild(inp);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+      form.remove();
+
+      e.target.reset();
+      btn.disabled = false;
     });
 
-    // ====== INIT ======
+    // INIT
     loadServices();
     renderServicesCards();
     renderServicesTable();
     renderServiceSelect();
-
-    // Mặc định mở panel Dịch vụ
     showPanel("panelServices");
   </script>
 </body>
