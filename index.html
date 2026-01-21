@@ -1,166 +1,605 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dịch Vụ Vay Tài Chính Nhanh Tuấn Anh</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
+    :root{
+      --primary:#0066cc;
+      --primary-dark:#003366;
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --ok:#2e7d32;
+      --danger:#b91c1c;
+      --soft:#e9f1fb;
+    }
+
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
-      background-color: #f5f7fa;
+      background-color: var(--bg);
       color: #333;
     }
+
     header {
-      background-color: #0066cc;
+      background-color: var(--primary);
       color: white;
-      padding: 20px;
+      padding: 18px 16px;
       text-align: center;
     }
     header h1 {
-      margin: 0;
-      font-size: 28px;
+      margin: 6px 0;
+      font-size: 26px;
+      line-height: 1.2;
     }
+    header .sub {
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
     nav {
       margin-top: 10px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
     }
-    nav a {
+    nav button, nav a {
+      appearance:none;
+      border: none;
+      background: rgba(255,255,255,0.12);
       color: white;
-      margin: 0 15px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
       text-decoration: none;
-      font-weight: bold;
+      transition: transform .06s ease;
     }
+    nav button:hover, nav a:hover { transform: translateY(-1px); }
+    nav button:active, nav a:active { transform: translateY(0px); }
+
     .hero {
-  background-color: #2e7d32; 
-  padding: 100px 20px;
-  text-align: center;
-  color: white;
-}
+      background-color: var(--ok);
+      padding: 70px 16px;
+      text-align: center;
+      color: white;
+    }
     .hero h2 {
-      font-size: 36px;
-      margin-bottom: 10px;
+      font-size: 34px;
+      margin: 0 0 10px;
     }
     .hero p {
       font-size: 18px;
+      margin: 0;
+      opacity: 0.95;
     }
+
+    .container{
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 22px 16px 40px;
+    }
+
     .features {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      padding: 50px 20px;
-      background-color: #fff;
+      gap: 18px;
+      padding: 24px 0;
     }
     .feature {
       width: 300px;
-      margin: 20px;
-      background-color: #e9f1fb;
-      padding: 20px;
-      border-radius: 10px;
+      background-color: var(--soft);
+      padding: 18px;
+      border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
-    .feature h3 {
-      color: #0066cc;
+    .feature h3 { color: var(--primary); margin: 6px 0 10px; }
+
+    /* Panel (bảng) dùng cho Dịch vụ / Đăng ký / Liên hệ */
+    .panel {
+      display:none;
+      margin: 18px auto 0;
+      max-width: 900px;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
-    .form-section {
-      background-color: #f0f2f5;
-      padding: 50px 20px;
-      text-align: center;
+    .panel.active { display:block; }
+
+    .panel-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #eef2f7;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
     }
-    .form-section form {
-      max-width: 500px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    .panel-header h2{
+      margin: 0;
+      font-size: 20px;
     }
-    .form-section input, .form-section textarea {
-      width: 100%;
+    .panel-header .hint{
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    input, textarea, select{
+      width:100%;
       padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      background: #fff;
     }
-    .form-section button {
-      background-color: #0066cc;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
+    textarea{ min-height: 90px; resize: vertical; }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
     }
+    .btn{
+      border:none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-weight: 800;
+      background: var(--primary);
+      color:#fff;
+    }
+    .btn.secondary{ background: #111827; }
+    .btn.ghost{ background: #e5e7eb; color:#111827; }
+    .btn.danger{ background: var(--danger); }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      overflow:hidden;
+      border-radius: 12px;
+      border: 1px solid #eef2f7;
+    }
+    .table th, .table td{
+      text-align:left;
+      padding: 10px;
+      border-bottom: 1px solid #eef2f7;
+      font-size: 14px;
+    }
+    .table th{
+      background: #f8fafc;
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .pill{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #eef2ff;
+    }
+
     footer {
-      background-color: #003366;
+      background-color: var(--primary-dark);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 18px;
       font-size: 14px;
+    }
+
+    .contact-links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .contact-links a{
+      display:inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration:none;
+      font-weight: 800;
+      color:#111827;
+      background:#e5e7eb;
     }
   </style>
 </head>
+
 <body>
+  <header>
+    <h1>Dịch Vụ Vay Tài Chính Tuấn Anh Mirae</h1>
+    <div class="sub">LH/ZALO: <strong>0346635146</strong></div>
 
-  <header>  
-  <h1>Dịch Vụ Vay Tài Chính Tuấn Anh Mirae</h1>
-    <h1>LH/ZALO: 0346635146</h1>
     <nav>
-      <a href="#" onclick="reloadHomePage()">Trang chủ</a>
-
-<script>
-function reloadHomePage() {
-    location.reload(); // Phương thức này sẽ reload lại trang hiện tại
-}
-</script>
-      <a href="#dichvu">Dịch vụ</a>
-          <button onclick="addTab('Dịch vụ', 'VAY THEO LƯƠNG cass loan')">Dịch vụ</button>
-
-<div id="tabContainer">
-  <!-- Tabs sẽ được thêm ở đây -->
-</div>
-
-      <a href="#dangky">Đăng ký</a>
-      <a href="#lienhe">Liên hệ</a>
+      <button type="button" id="btnHome">Trang chủ</button>
+      <button type="button" id="btnServices">Dịch vụ</button>
+      <button type="button" id="btnRegister">Đăng ký</button>
+      <button type="button" id="btnContact">Liên hệ</button>
     </nav>
   </header>
 
-  <section class="hero">
-    <h2>Vay Nhanh - Duyệt Nhanh - Giải Ngân Trong 24-48h</h2>
-    <p>Không cần thế chấp - Lãi suất cạnh tranh - Hỗ trợ 24/7</p>
+  <section class="hero" id="home">
+    <h2>Vay Nhanh - Duyệt Nhanh - Giải Ngân 24–48h</h2>
+    <p>Không cần thế chấp • Lãi suất cạnh tranh • Hỗ trợ 24/7</p>
   </section>
 
-  <section class="features" id="dichvu">
-    <div class="feature">
-      <h3>Giải ngân trong ngày</h3>
-      <p>Thủ tục đơn giản, nhận tiền chỉ trong 24h-48h.</p>
-    </div>
-    <div class="feature">
-      <h3>Lãi suất ưu đãi</h3>
-      <p>Lãi suất chỉ từ 1.5%-5.5%/tháng, minh bạch & rõ ràng.</p>
-    </div>
-    <div class="feature">
-      <h3>Hỗ trợ toàn quốc</h3>
-      <p>Dù bạn ở đâu, chúng tôi luôn sẵn sàng hỗ trợ.</p>
-    </div>
-  </section>
-<section class="form-section" id="dangky">
-  <h2>Đăng ký vay ngay</h2>
-  <p>Điền thông tin bên dưới, chúng tôi sẽ liên hệ lại ngay, Hoặc liên hệ zalo/0346635146.</p>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdYizNYSNpqy8tJ_qs89Ws8xWWgK9hjlt3FOrHxcWZoOd3vfw/viewform?usp=dialog" target="_blank">
-    <button style="background-color: #0066cc; color: white; padding: 12px 24px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
-      Gửi thông tin đăng ký
-    </button>
-  </a>
-</section>
-  <footer id="lienhe">
-    © 2025 Dịch vụ vay tiêu dùng,tài chính,kinh doanh
-          © TUẤN ANH MIRAE © MIRAE ASSET
+  <div class="container">
+    <!-- Các thẻ dịch vụ hiển thị ngoài trang -->
+    <section class="features" id="servicesCards">
+      <!-- JS sẽ render theo danh sách dịch vụ -->
+    </section>
+
+    <!-- PANEL: Dịch vụ -->
+    <section class="panel" id="panelServices" aria-live="polite">
+      <div class="panel-header">
+        <div>
+          <h2>Quản lý dịch vụ</h2>
+          <div class="hint">Bạn có thể thêm/sửa/xóa dịch vụ. Dữ liệu lưu trên trình duyệt (localStorage).</div>
+        </div>
+        <div class="hint">Mẹo: sửa xong bấm “Lưu dịch vụ”.</div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="svcName">Tên dịch vụ</label>
+          <input id="svcName" placeholder="Ví dụ: Vay theo lương" />
+        </div>
+        <div>
+          <label for="svcRate">Lãi suất</label>
+          <input id="svcRate" placeholder="Ví dụ: 1.5% - 5.5%/tháng" />
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="svcDesc">Mô tả</label>
+          <textarea id="svcDesc" placeholder="Mô tả ngắn về điều kiện, thời gian giải ngân, khu vực hỗ trợ..."></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnSaveService">Lưu dịch vụ</button>
+        <button class="btn ghost" id="btnClearService">Nhập mới</button>
+        <button class="btn danger" id="btnDeleteService" disabled>Xóa dịch vụ đang chọn</button>
+      </div>
+
+      <table class="table" aria-label="Danh sách dịch vụ">
+        <thead>
+          <tr>
+            <th style="width:32%">Tên</th>
+            <th style="width:20%">Lãi suất</th>
+            <th>Mô tả</th>
+            <th style="width:10%">Chọn</th>
+          </tr>
+        </thead>
+        <tbody id="servicesTableBody"></tbody>
+      </table>
+    </section>
+
+    <!-- PANEL: Đăng ký -->
+    <section class="panel" id="panelRegister">
+      <div class="panel-header">
+        <div>
+          <h2>Đăng ký vay</h2>
+          <div class="hint">Khách điền form bên dưới. (Lưu ý: hiện form chỉ lưu trên trình duyệt; muốn gửi về bạn cần Google Apps Script/Server.)</div>
+        </div>
+      </div>
+
+      <form id="registerForm">
+        <div class="grid">
+          <div>
+            <label for="fullName">Họ và tên</label>
+            <input id="fullName" required placeholder="Nguyễn Văn A" />
+          </div>
+          <div>
+            <label for="phone">Số điện thoại</label>
+            <input id="phone" required inputmode="tel" placeholder="09xxxxxxxx" />
+          </div>
+          <div>
+            <label for="location">Khu vực</label>
+            <input id="location" placeholder="TP/Huyện/Quận" />
+          </div>
+          <div>
+            <label for="serviceSelect">Chọn dịch vụ</label>
+            <select id="serviceSelect"></select>
+          </div>
+          <div>
+            <label for="amount">Số tiền cần vay (ước tính)</label>
+            <input id="amount" inputmode="numeric" placeholder="Ví dụ: 50.000.000" />
+          </div>
+          <div>
+            <label for="income">Thu nhập/tháng (ước tính)</label>
+            <input id="income" inputmode="numeric" placeholder="Ví dụ: 12.000.000" />
+          </div>
+          <div style="grid-column:1/-1">
+            <label for="note">Ghi chú</label>
+            <textarea id="note" placeholder="Bạn muốn tư vấn thêm điều gì?"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" type="submit">Gửi đăng ký</button>
+          <button class="btn ghost" type="reset">Nhập lại</button>
+        </div>
+      </form>
+
+      <div id="registerResult" style="margin-top:14px;color:#111827;"></div>
+    </section>
+
+    <!-- PANEL: Liên hệ -->
+    <section class="panel" id="panelContact">
+      <div class="panel-header">
+        <div>
+          <h2>Liên hệ</h2>
+          <div class="hint">Bấm để gọi/nhắn Zalo/Facebook.</div>
+        </div>
+      </div>
+
+      <div>
+        <p><strong>Số điện thoại:</strong> <a href="tel:0346635146">0346635146</a></p>
+
+        <!-- Zalo: link theo số điện thoại -->
+        <div class="contact-links">
+          <a href="https://zalo.me/0346635146" target="_blank" rel="noopener">Nhắn Zalo</a>
+          <!-- Facebook: bạn thay link thật của bạn vào đây -->
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+          <a href="mailto:yourmail@example.com">Email</a>
+        </div>
+
+        <p style="color:var(--muted);margin-top:10px;">
+          Gợi ý: bạn thay link Facebook và Email theo thông tin của bạn để khách liên hệ nhanh hơn.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    © 2025 Dịch vụ vay tiêu dùng, tài chính, kinh doanh • © TUẤN ANH MIRAE • © MIRAE ASSET
   </footer>
 
+  <script>
+    // ====== STATE + STORAGE ======
+    const STORAGE_KEY_SERVICES = "tuankem_services_v1";
+    const STORAGE_KEY_REG = "tuankem_registrations_v1";
+
+    /** @type {{id:string,name:string,rate:string,desc:string}[]} */
+    let services = [];
+    let selectedServiceId = null;
+
+    function uid() {
+      return Math.random().toString(16).slice(2) + Date.now().toString(16);
+    }
+
+    function loadServices() {
+      const raw = localStorage.getItem(STORAGE_KEY_SERVICES);
+      if (raw) {
+        try { services = JSON.parse(raw) || []; }
+        catch { services = []; }
+      }
+
+      // Nếu chưa có gì thì set mặc định (từ code cũ của bạn)
+      if (!services.length) {
+        services = [
+          { id: uid(), name: "Giải ngân trong ngày", rate: "24–48h", desc: "Thủ tục đơn giản, nhận tiền chỉ trong 24h-48h." },
+          { id: uid(), name: "Lãi suất ưu đãi", rate: "1.5%–5.5%/tháng", desc: "Lãi suất minh bạch & rõ ràng." },
+          { id: uid(), name: "Hỗ trợ toàn quốc", rate: "Toàn quốc", desc: "Dù bạn ở đâu, chúng tôi luôn sẵn sàng hỗ trợ." }
+        ];
+        saveServices();
+      }
+    }
+
+    function saveServices() {
+      localStorage.setItem(STORAGE_KEY_SERVICES, JSON.stringify(services));
+    }
+
+    // ====== RENDER ======
+    function renderServicesCards() {
+      const container = document.getElementById("servicesCards");
+      container.innerHTML = "";
+
+      services.forEach(s => {
+        const div = document.createElement("div");
+        div.className = "feature";
+        div.innerHTML = `
+          <h3>${escapeHtml(s.name)}</h3>
+          <div class="pill">${escapeHtml(s.rate || "")}</div>
+          <p style="margin-top:10px">${escapeHtml(s.desc || "")}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderServicesTable() {
+      const body = document.getElementById("servicesTableBody");
+      body.innerHTML = "";
+
+      services.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(s.name)}</strong></td>
+          <td>${escapeHtml(s.rate || "")}</td>
+          <td>${escapeHtml(s.desc || "")}</td>
+          <td><button class="btn ghost" type="button" data-id="${s.id}">Chọn</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+      // Attach click
+      body.querySelectorAll("button[data-id]").forEach(btn => {
+        btn.addEventListener("click", () => selectService(btn.getAttribute("data-id")));
+      });
+    }
+
+    function renderServiceSelect() {
+      const select = document.getElementById("serviceSelect");
+      select.innerHTML = "";
+      services.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        opt.textContent = s.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // ====== UI HELPERS ======
+    function showPanel(panelId) {
+      ["panelServices","panelRegister","panelContact"].forEach(id => {
+        document.getElementById(id).classList.remove("active");
+      });
+      document.getElementById(panelId).classList.add("active");
+      // Scroll nhẹ tới panel
+      document.getElementById(panelId).scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function clearServiceForm() {
+      selectedServiceId = null;
+      document.getElementById("svcName").value = "";
+      document.getElementById("svcRate").value = "";
+      document.getElementById("svcDesc").value = "";
+      document.getElementById("btnDeleteService").disabled = true;
+    }
+
+    function selectService(id) {
+      const s = services.find(x => x.id === id);
+      if (!s) return;
+      selectedServiceId = id;
+      document.getElementById("svcName").value = s.name || "";
+      document.getElementById("svcRate").value = s.rate || "";
+      document.getElementById("svcDesc").value = s.desc || "";
+      document.getElementById("btnDeleteService").disabled = false;
+      showPanel("panelServices");
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // ====== EVENTS ======
+    document.getElementById("btnHome").addEventListener("click", () => location.reload());
+
+    document.getElementById("btnServices").addEventListener("click", () => showPanel("panelServices"));
+    document.getElementById("btnRegister").addEventListener("click", () => showPanel("panelRegister"));
+    document.getElementById("btnContact").addEventListener("click", () => showPanel("panelContact"));
+
+    document.getElementById("btnSaveService").addEventListener("click", () => {
+      const name = document.getElementById("svcName").value.trim();
+      const rate = document.getElementById("svcRate").value.trim();
+      const desc = document.getElementById("svcDesc").value.trim();
+
+      if (!name) {
+        alert("Bạn cần nhập Tên dịch vụ.");
+        return;
+      }
+
+      if (selectedServiceId) {
+        const idx = services.findIndex(x => x.id === selectedServiceId);
+        if (idx >= 0) services[idx] = { ...services[idx], name, rate, desc };
+      } else {
+        services.unshift({ id: uid(), name, rate, desc });
+      }
+
+      saveServices();
+      renderServicesCards();
+      renderServicesTable();
+      renderServiceSelect();
+      clearServiceForm();
+      alert("Đã lưu dịch vụ.");
+    });
+
+    document.getElementById("btnClearService").addEventListener("click", clearServiceForm);
+
+    document.getElementById("btnDeleteService").addEventListener("click", () => {
+      if (!selectedServiceId) return;
+      const s = services.find(x => x.id === selectedServiceId);
+      if (!s) return;
+      if (!confirm(`Xóa dịch vụ "${s.name}"?`)) return;
+
+      services = services.filter(x => x.id !== selectedServiceId);
+      saveServices();
+      renderServicesCards();
+      renderServicesTable();
+      renderServiceSelect();
+      clearServiceForm();
+    });
+
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const payload = {
+        id: uid(),
+        time: new Date().toISOString(),
+        fullName: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        serviceId: document.getElementById("serviceSelect").value,
+        amount: document.getElementById("amount").value.trim(),
+        income: document.getElementById("income").value.trim(),
+        note: document.getElementById("note").value.trim(),
+      };
+
+      if (!payload.fullName || !payload.phone) {
+        alert("Vui lòng nhập Họ và tên + Số điện thoại.");
+        return;
+      }
+
+      // Lưu localStorage (demo)
+      const raw = localStorage.getItem(STORAGE_KEY_REG);
+      let list = [];
+      if (raw) { try { list = JSON.parse(raw) || []; } catch { list = []; } }
+      list.unshift(payload);
+      localStorage.setItem(STORAGE_KEY_REG, JSON.stringify(list));
+
+      const svc = services.find(s => s.id === payload.serviceId);
+      document.getElementById("registerResult").innerHTML = `
+        <div class="pill">Gửi thành công</div>
+        <p style="margin:10px 0 0">
+          Cảm ơn <strong>${escapeHtml(payload.fullName)}</strong>.
+          Chúng tôi sẽ liên hệ số <strong>${escapeHtml(payload.phone)}</strong> sớm.
+        </p>
+        <p style="margin:6px 0 0; color:var(--muted)">
+          Dịch vụ: <strong>${escapeHtml(svc ? svc.name : "")}</strong>
+        </p>
+      `;
+
+      e.target.reset();
+    });
+
+    // ====== INIT ======
+    loadServices();
+    renderServicesCards();
+    renderServicesTable();
+    renderServiceSelect();
+  </script>
 </body>
 </html>
-
-
-
-
